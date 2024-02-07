@@ -1,3 +1,4 @@
+import { nextui } from "@nextui-org/react"
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -7,6 +8,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
 	],
   prefix: "",
   theme: {
@@ -73,6 +75,8 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
+    darkMode: "class",
+    plugins: [nextui()],
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config
