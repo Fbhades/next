@@ -1,12 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { Product } from '@/app/models/produits';
+import Link from 'next/link';
 
 interface ProductsListProps {
   product: Product;
 }
 
 function ProductsList({ product }: ProductsListProps) {
+  const productId = product._id.toString();
+
   return (
     <div className="border border-gray-100 bg-white p-6 rounded">
       <img
@@ -21,13 +24,20 @@ function ProductsList({ product }: ProductsListProps) {
       <p className="mt-1.5 text-sm text-gray-700">
         {product.prixAchatHT?.toFixed(2)}
       </p>
-      <form className="mt-4">
+      <div className="mt-4 flex space-x-4">
+        <Link href={`/Details/${productId}`} legacyBehavior>
+          <a>
+            <button className="flex-1 rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105">
+              Details
+            </button>
+          </a>
+        </Link>
         <button
-          className="block w-full rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105"
+          className="flex-1 rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105"
         >
           Add to Cart
         </button>
-      </form>
+      </div>
     </div>
   );
 }

@@ -44,7 +44,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="px-16 sticky top-0 z-50">
+      <div className="px-16sticky top-0 z-50">
         <Header />
       </div>
       <div className=" px-16 flex items-center justify-center">

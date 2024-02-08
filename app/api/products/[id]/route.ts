@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
-import { connect, selectAllProduits, selectProduitById, Product, createProduit, deleteProduitById, updateProduitById } from "@/app/models/produits";
+import { connect, selectProduitById,selectAllProduits, deleteProduitById, updateProduitById } from "@/app/models/produits";
 import { ObjectId } from "mongodb";
 
 export const GET = async (request: Request) => {
-  await connect();
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  let result = id ? await selectProduitById(id) : await selectAllProduits();
-  console.log(result);
-  return NextResponse.json(result, { status: 200 });
-};
+    await connect();
+    const id = request.url.split("/").pop();
+    console.log("ID: ", id); // log the ID
+    let result = id ? await selectProduitById(id) : await selectAllProduits();
+    console.log("Result: ", result); // log the result
+    return NextResponse.json(result, { status: 200 });
+  };
 
 export const DELETE = async (request: Request) => {
   await connect();
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+  const { url } = request;
+  const id = url.split("/").pop();
   if (!id) {
     return NextResponse.json({ message: "Missing 'id' parameter" }, { status: 400 });
   }
@@ -30,8 +30,8 @@ export const DELETE = async (request: Request) => {
 
 export const PUT = async (request: Request) => {
   await connect();
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+  const { url } = request;
+  const id = url.split("/").pop();
   if (!id) {
     return NextResponse.json({ message: "Missing 'id' parameter" }, { status: 400 });
   }

@@ -1,22 +1,23 @@
 import mongoose, { Schema, model, models } from "mongoose";
+import { ObjectId } from "mongodb"; 
+
 export interface Product {
-    _id: String,
-    code: Number,
-    codeABar: Number,
-    Désignation: String,
-    Famille: String,
-    Marque: String,
-    prixAchatHT: Number,
-    MB: Number,
-    TVA: Number,
-    pventeTTC: Number,
-    pventePubHT: Number,
-    dateCreation: Date,
-    dateModification: Date,
-  
+  _id:  string;
+  code: number;
+  codeABar: number;
+  Désignation: string;
+  Famille: string;
+  Marque: string;
+  prixAchatHT: number;
+  MB: number;
+  TVA: number;
+  pventeTTC: number;
+  pventePubHT: number;
+  dateCreation: Date;
+  dateModification: Date;
 }
+
 const produitSchema = new Schema({
-  _id: String,
   code: Number,
   codeABar: Number,
   Désignation: String,
@@ -31,13 +32,13 @@ const produitSchema = new Schema({
   dateModification: Date,
 });
 
-const Produit = models.product||model("product", produitSchema);
+const Produit = models.product || model("product", produitSchema);
 
 async function connect() {
- await  mongoose.connect(
+  await mongoose.connect(
     "mongodb+srv://fbmoddy:Fblux@cluster0.tmxybv9.mongodb.net/ecom?retryWrites=true&w=majority",
     {}
-  )
+  );
 }
 
 function createProduit(produit: Product) {
@@ -45,26 +46,44 @@ function createProduit(produit: Product) {
   return newProduit.save();
 }
 
-function deleteProduitById(id: String) {
-  return Produit.findByIdAndDelete(id);
+function deleteProduitById(_id: string) {
+  return Produit.findByIdAndDelete(_id);
 }
 
-function updateProduitById(id: String, produit: Product) {
-  return Produit.findByIdAndUpdate(id, produit, { new: true });
+function updateProduitById(_id: string, produit: Product) {
+  return Produit.findByIdAndUpdate(_id, produit, { new: true });
 }
 
 async function selectAllProduits() {
-  await  connect()
   let result = await Produit.find();
-return result
+  return result;
 }
 
-function selectProduitById(id: String) {
-  return Produit.findById(id);
+async function selectProduitById(_id: string) {
+  try {
+    await connect();
+    console.log("Provided ID: ", _id);
+    const objectId =new mongoose.Types.ObjectId(_id);
+    console.log("Converted ObjectId: ", objectId);
+    const result = await Produit.findById({_id:_id});
+    console.log("Query Result: ", result);
+    return result;
+  } catch (error: any) {
+    throw new Error(`Error fetching product by ID: ${error.message}`);
+  }
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export  {
+async function selectProduitsByFamille(famille: string) {
+  try {
+    await connect();
+    const products = await Produit.find({ Famille: famille });
+    return products;
+  } catch (error: any) { 
+    throw new Error(`Error fetching products by Famille: ${error.message}`);
+  }
+}
+
+export {
   connect,
   Produit,
   createProduit,
@@ -72,4 +91,5 @@ export  {
   updateProduitById,
   selectAllProduits,
   selectProduitById,
+  selectProduitsByFamille, 
 };
