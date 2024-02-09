@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "@/components/header";
@@ -12,7 +12,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [familleTypes, setFamilleTypes] = useState([]);
+  const [familleTypes, setFamilleTypes] = useState<string[]>([]);
 
   const fetchData = async () => {
     try {
@@ -32,13 +32,36 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategoryClick = async (category: string) => {
     setSelectedCategory(category);
+    setLoading(true);
+    setError(null);
+  
+    if (category === '') {
+      try {
+        const response = await axios.get("http://localhost:3000/api/products");
+        console.log((await response).data);
+        setProducts((await response).data.products);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/products/${category}`);
+        console.log((await response).data);
+        setProducts((await response).data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
-  const filteredProducts = selectedCategory
-    ? products.filter((product) => product.Famille === selectedCategory)
-    : products;
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -60,8 +83,7 @@ export default function Home() {
 
           {error && <p>Error: {error}</p>}
 
-          {filteredProducts.length > 0 &&
-            filteredProducts.map((product: Product) => (
+          {products.map((product: Product) => (
               <div
                 key={product._id as string}
                 className="border border-gray-100 bg-white p-6 rounded"
