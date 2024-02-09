@@ -83,6 +83,15 @@ async function selectProduitsByFamille(famille: string) {
   }
 }
 
+async function selectAllFamille() {
+  try {
+    await connect();
+    const familleTypes = await Produit.distinct('Famille');
+    return familleTypes;
+  } catch (error: any) {
+    throw new Error(`Error fetching unique famille types: ${error.message}`);
+  }
+}
 export {
   connect,
   Produit,
@@ -92,4 +101,5 @@ export {
   selectAllProduits,
   selectProduitById,
   selectProduitsByFamille, 
+  selectAllFamille,
 };

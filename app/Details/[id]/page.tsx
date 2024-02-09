@@ -9,7 +9,7 @@ const ProductDetails = () => {
   const [product, setProduct] = React.useState<Product | null>(null);
 
   const fetchProduct = async () => {
-    const response = await fetch(`/api/products/${id}`);
+    const response = await fetch(`/api/products/id/${id}`);
     if (response.ok) {
       const data = await response.json();
       console.log(data);
