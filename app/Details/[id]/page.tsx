@@ -3,8 +3,12 @@
 import React from 'react';
 import { Product } from '@/app/models/produits';
 import { useParams } from 'next/navigation';
+import Header from "@/components/header";
+import { useCartStore } from '@/components/cartStore';
+
 
 const ProductDetails = () => {
+  const { addToCart } = useCartStore();
   const {id} = useParams<{id:string}>();  
   const [product, setProduct] = React.useState<Product | null>(null);
 
@@ -32,6 +36,8 @@ const ProductDetails = () => {
   const { code, Désignation, Famille, prixAchatHT, Marque, dateCreation, dateModification } = product;
 
   return (
+    <>
+    <Header/>
     <div className="container mx-auto px-4 py-16">
       <div className="flex flex-wrap">
         <div className="w-full md:w-1/3 lg:w-1/4 p-4 lg:p-6">
@@ -62,15 +68,17 @@ const ProductDetails = () => {
             <span className="font-semibold mr-1">Date de modification:</span> {new Date(dateModification).toLocaleString()}
           </p>
           <div className="mt-4 flex space-x-4">
-            <button
-              className="flex-1 rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105"
-            >
-              Add to Cart
-            </button>
+          <button
+          onClick={() => addToCart(product)}
+          className="flex-1 rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105"
+        >
+          Add to Cart
+        </button>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 };
 
