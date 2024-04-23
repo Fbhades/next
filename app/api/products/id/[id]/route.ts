@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { connect, selectProduitById,selectAllProduits, deleteProduitById, updateProduitById } from "@/app/models/produits";
-import { ObjectId } from "mongodb";
+import { connect, selectProduitById,selectAllProduits, deleteProduitById, Produit } from "@/app/models/produits";
 
 export const GET = async (request: Request) => {
     await connect();
@@ -28,20 +27,3 @@ export const DELETE = async (request: Request) => {
   }
 };
 
-export const PUT = async (request: Request) => {
-  await connect();
-  const { url } = request;
-  const id = url.split("/").pop();
-  if (!id) {
-    return NextResponse.json({ message: "Missing 'id' parameter" }, { status: 400 });
-  }
-
-  const updatedProduit = await request.json();
-  try {
-    const result = await updateProduitById(id, updatedProduit);
-    return NextResponse.json(result, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Error updating product" }, { status: 500 });
-  }
-};

@@ -1,9 +1,8 @@
-import mongoose, { Schema, model, models } from "mongoose";
-import { ObjectId } from "mongodb"; 
+import mongoose, { Schema, model, models } from "mongoose"; 
 
 export interface Product {
   _id:  string;
-  code: number;
+  Code: number;
   codeABar: number;
   Désignation: string;
   Famille: string;
@@ -43,7 +42,7 @@ async function connect() {
 
 function createProduit(produit: Product) {
   const newProduit = new Produit(produit);
-  return newProduit.save();
+  return Produit.create(newProduit);
 }
 
 function deleteProduitById(_id: string) {
